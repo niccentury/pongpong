@@ -11,9 +11,17 @@ newCanvas.width = window.innerWidth;
 newCanvas.height = window.innerHeight;
 
 let paddle1 = {
-    xCord : 50,
-    yCord : 50,
-    
+    xCord : newCanvas.width/1.1,
+    yCord : newCanvas.height/3.3,
+    paddle1H : newCanvas.height/3.3,
+    paddle1W : newCanvas.width/60
+}
+
+let paddle2 = {
+    xCord : newCanvas.width/15,
+    yCord : newCanvas.height/3.3,
+    paddle2H : newCanvas.height/3.3,
+    paddle2W : newCanvas.width/60
 }
 
 let ctx = newCanvas.getContext("2d");
@@ -24,11 +32,11 @@ function gameStart()
     newButton.remove();
     document.body.appendChild(newCanvas);
     ctx.fillStyle = "red";
-    ctx.fillRect(50,50, 20, 300);
+    ctx.fillRect(paddle2.xCord, paddle2.yCord, paddle2.paddle2W, paddle2.paddle2H);
     ctx.globalCompositeOperation = "clipping";
     //ctx.translate(-5,-5);
     ctx.fillStyle = "blue";
-    ctx.fillRect(1450,50, 20, 300);
+    ctx.fillRect(paddle1.xCord, paddle1.yCord, paddle1.paddle1W, paddle1.paddle1H);
     ctx.fillStyle = "yellow";
     gameLoop();
 }
