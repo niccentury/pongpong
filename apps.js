@@ -24,7 +24,15 @@ let paddle2 = {
     paddle2W : newCanvas.width/60
 }
 
+let ball = {
+    xPos : newCanvas.width/2,
+    yPos : newCanvas.height/2,
+    h : newCanvas.height/30,
+    w : newCanvas.width/61.44
+}
+
 let ctx = newCanvas.getContext("2d");
+let speed = 2;
 
 function gameStart()
 {
@@ -37,17 +45,37 @@ function gameStart()
     //ctx.translate(-5,-5);
     ctx.fillStyle = "blue";
     ctx.fillRect(paddle1.xCord, paddle1.yCord, paddle1.paddle1W, paddle1.paddle1H);
-    ctx.fillStyle = "yellow";
+    
+
+
     gameLoop();
 }
 
 function gameLoop()
 {
     setInterval(() => {
-        ctx.clearRect(0, 0, 10, 10);
-        ctx.translate(1,1);
-        ctx.fillRect(0, 0, 10, 10);
+        ctx.clearRect(ball.xPos -1, ball.yPos-1, ball.w +1, ball.h+2);
+        ctx.fillStyle = "black";
+        ball.xPos += speed;
+        HitOccurred();
+        ctx.translate(0, 0);
+        ctx.fillRect(ball.xPos, ball.yPos, ball.w, ball.h);
     }, 10);
+}
+
+function HitOccurred()
+{
+    
+    if(ball.xPos + ball.w >= paddle1.xCord)
+    {
+        console.log("it hit");
+        ball.xPos = paddle1.xCord - ball.w;
+        speed * -1;
+    }
+    else if(ball.xPos <= paddle1.yCord + paddle2.paddle1W)
+    {
+
+    }
 }
 
 newButton.onclick = gameStart;
