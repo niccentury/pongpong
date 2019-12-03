@@ -52,3 +52,42 @@ function gameLoop()
 
 newButton.onclick = gameStart;
 
+document.addEventListener('keydown', keyDownHandler);
+document.addEventListener('keyup', keyUpHandler);
+
+let upPressed = false;
+let downPressed = false;
+let W_Pressed = false;
+let S_Pressed = false;
+
+function keyDownHandler(event) {
+    if(event.key == 'ArrowUp') {
+        upPressed = true;
+    }
+    else if(event.key == 'ArrowDown') {
+        downPressed = true;
+    }
+    else if(event.key == 'w') {
+        W_Pressed = true;
+    }
+    else if(event.key == 's') {
+        S_Pressed = true;
+    }
+}
+
+function keyUpHandler(event)
+{
+    if(event.key == 'ArrowUp') {
+        upPressed = false;
+    }
+    else if(event.key == 'ArrowDown') {
+        downPressed = false;
+    }
+    else if(event.key == 'w') {
+        W_Pressed = false;
+    }
+    else if(event.key == 's') {
+        S_Pressed = false;
+    }
+}
+
