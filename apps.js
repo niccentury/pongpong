@@ -14,16 +14,16 @@ newCanvas.width = window.innerWidth/1.5;
 newCanvas.height = window.innerHeight/1.5;
 
 let paddle1 = {
-    xCord : newCanvas.width/1.1,
-    yCord : newCanvas.height/3.3,
+    xCoord : newCanvas.width/1.1,
+    yCoord : newCanvas.height/3.3,
     paddle1H : newCanvas.height/3.3,
     paddle1W : newCanvas.width/72,
     score : 0
 }
 
 let paddle2 = {
-    xCord : newCanvas.width/15,
-    yCord : newCanvas.height/3.3,
+    xCoord : newCanvas.width/15,
+    yCoord : newCanvas.height/3.3,
     paddle2H : newCanvas.height/3.3,
     paddle2W : newCanvas.width/72,
     score : 0
@@ -48,14 +48,14 @@ let S_Pressed = false;
 
 function gameStart()
 {
-    console.log(paddle2.paddle2W);
+    // console.log(paddle2.paddle2W);
     newH1.remove();
     newButton.remove();
     document.body.appendChild(newCanvas);
 
     ctx.globalCompositeOperation = "clipping";
     ctx.fillStyle = "blue";
-    ctx.fillRect(paddle1.xCord, paddle1.yCord, paddle1.paddle1W, paddle1.paddle1H);
+    ctx.fillRect(paddle1.xCoord, paddle1.yCoord, paddle1.paddle1W, paddle1.paddle1H);
     
 
 
@@ -75,53 +75,52 @@ function gameLoop()
         ctx.fillStyle = "black";
         ball.xPos += speed;
         ball.yPos += angle;
-        ScoreEarned();
-        HitOccurred();
         ctx.translate(0, 0);
         ctx.fillRect(ball.xPos, ball.yPos, ball.w, ball.h);
 
             if (upPressed)
             {
-                if (paddle1.yCord > 0)
+                if (paddle1.yCoord > 0)
                 {
-                paddle1.yCord--;
+                paddle1.yCoord--;
                 }
             }
 
             if (downPressed)
             {
-                if (paddle1.yCord + paddle1.paddle1H <= newCanvas.height)
+                if (paddle1.yCoord + paddle1.paddle1H <= newCanvas.height)
                 {
-                paddle1.yCord++;
+                paddle1.yCoord++;
                 }
             }
 
 
         if (W_Pressed)
         {
-            if (paddle2.yCord > 0)
+            if (paddle2.yCoord > 0)
             {
-                paddle2.yCord--;
+                paddle2.yCoord--;
             }
         }
 
         if (S_Pressed)
         {
-            if (paddle2.yCord + paddle2.paddle2H < newCanvas.height)
+            if (paddle2.yCoord + paddle2.paddle2H < newCanvas.height)
             {
-                paddle2.yCord++;
+                paddle2.yCoord++;
             }
         }
 
-
+        ScoreEarned();
+        HitOccurred();
 
         ctx.fillStyle = "blue"
 
-        ctx.fillRect(paddle1.xCord, paddle1.yCord , paddle1.paddle1W, paddle1.paddle1H);
+        ctx.fillRect(paddle1.xCoord, paddle1.yCoord , paddle1.paddle1W, paddle1.paddle1H);
 
         ctx.fillStyle = "red";
-        ctx.fillRect(paddle2.xCord, paddle2.yCord, paddle2.paddle2W, paddle2.paddle2H);
-
+        ctx.fillRect(paddle2.xCoord, paddle2.yCoord, paddle2.paddle2W, paddle2.paddle2H);
+    
 
 
 
@@ -139,11 +138,11 @@ function HitOccurred()
         angle = angle * -1;
     }
 
-    if(ball.xPos + ball.w >= paddle1.xCord && ball.yPos >= paddle1.yCord  && ball.yPos+ ball.w <= paddle1.yCord + paddle1.paddle1H)
+    if(ball.xPos + ball.w >= paddle1.xCoord && ball.yPos >= paddle1.yCoord  && ball.yPos+ ball.w <= paddle1.yCoord + paddle1.paddle1H)
     {
         speed = speed * -1;
     }
-    else if(ball.xPos <= paddle2.xCord + paddle2.paddle2W && ball.yPos >= paddle2.yCord && ball.yPos + ball.h <= paddle2.yCord + paddle2.paddle2H)
+    else if(ball.xPos <= paddle2.xCoord + paddle2.paddle2W && ball.yPos >= paddle2.yCoord && ball.yPos + ball.h <= paddle2.yCoord + paddle2.paddle2H)
     {
         speed = speed * -1;
     }
@@ -154,7 +153,7 @@ function HitOccurred()
 function ScoreEarned ()
 {
     
-    if (ball.xPos >= paddle1.xCord)
+    if (ball.xPos >= paddle1.xCoord)
     {
         paddle1.score ++;
         ball.xPos = newCanvas.width/2,
@@ -163,7 +162,7 @@ function ScoreEarned ()
         ball.w = newCanvas.width/61.44
     }
 
-    else if (ball.xPos <= paddle2.xCord)
+    else if (ball.xPos <= paddle2.xCoord)
     {
         paddle2.score ++;
         ball.xPos = newCanvas.width/2,
@@ -180,13 +179,13 @@ function keyDownHandler(event) {
     if(event.key === 'ArrowUp') {
         upPressed = true;
     }
-    else if(event.key === 'ArrowDown') {
+    if(event.key === 'ArrowDown') {
         downPressed = true;
     }
-    else if(event.key === 'w') {
+    if(event.key === 'w') {
         W_Pressed = true;
     }
-    else if(event.key === 's') {
+    if(event.key === 's') {
         S_Pressed = true;
     }
 }
@@ -196,13 +195,13 @@ function keyUpHandler(event)
     if(event.key === 'ArrowUp') {
         upPressed = false;
     }
-    else if(event.key === 'ArrowDown') {
+    if(event.key === 'ArrowDown') {
         downPressed = false;
     }
-    else if(event.key === 'w') {
+    if(event.key === 'w') {
         W_Pressed = false;
     }
-    else if(event.key === 's') {
+    if(event.key === 's') {
         S_Pressed = false;
     }
 }
