@@ -14,14 +14,14 @@ let paddle1 = {
     xCord : newCanvas.width/1.1,
     yCord : newCanvas.height/3.3,
     paddle1H : newCanvas.height/3.3,
-    paddle1W : newCanvas.width/60
+    paddle1W : newCanvas.width/72
 }
 
 let paddle2 = {
     xCord : newCanvas.width/15,
     yCord : newCanvas.height/3.3,
     paddle2H : newCanvas.height/3.3,
-    paddle2W : newCanvas.width/60
+    paddle2W : newCanvas.width/72
 }
 
 let ball = {
@@ -36,6 +36,7 @@ let speed = 2;
 
 function gameStart()
 {
+    console.log(paddle2.paddle2W);
     newH1.remove();
     newButton.remove();
     document.body.appendChild(newCanvas);
@@ -68,13 +69,11 @@ function HitOccurred()
     
     if(ball.xPos + ball.w >= paddle1.xCord)
     {
-        console.log("it hit");
-        ball.xPos = paddle1.xCord - ball.w;
-        speed * -1;
+        speed = speed * -1;
     }
-    else if(ball.xPos <= paddle1.yCord + paddle2.paddle1W)
+    else if(ball.xPos <= paddle2.xCord + paddle2.paddle2W)
     {
-
+        speed = speed * -1;
     }
 }
 
