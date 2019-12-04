@@ -1,6 +1,7 @@
 let newH1 = document.createElement("h1");
 newH1.textContent = "PONG";
 document.body.appendChild(newH1);
+    //ball.height + ball.yPos 
 
 let newButton = document.createElement("button");
 newButton.textContent = "START GAME";
@@ -34,14 +35,19 @@ let ball = {
 let ctx = newCanvas.getContext("2d");
 let speed = 2;
 
+let upPressed = false;
+let downPressed = false;
+let W_Pressed = false;
+let S_Pressed = false;
+
+
 function gameStart()
 {
     console.log(paddle2.paddle2W);
     newH1.remove();
     newButton.remove();
     document.body.appendChild(newCanvas);
-    ctx.fillStyle = "red";
-    ctx.fillRect(paddle2.xCord, paddle2.yCord, paddle2.paddle2W, paddle2.paddle2H);
+
     ctx.globalCompositeOperation = "clipping";
     //ctx.translate(-5,-5);
     ctx.fillStyle = "blue";
@@ -55,37 +61,79 @@ function gameStart()
 function gameLoop()
 {
     setInterval(() => {
-        ctx.clearRect(ball.xPos -1, ball.yPos-1, ball.w +1, ball.h+2);
+        ctx.clearRect(0 , 0 , window.innerWidth, window.innerHeight);
         ctx.fillStyle = "black";
         ball.xPos += speed;
         HitOccurred();
         ctx.translate(0, 0);
         ctx.fillRect(ball.xPos, ball.yPos, ball.w, ball.h);
+
+        if (upPressed){
+
+            paddle1.yCord--;
+            //ctx.clearRect(paddle1.xCord , paddle1.yCord , paddle1.paddle1W, paddle1.paddle1H);
+           // ctx.translate()
+           // ctx.fillRect(paddle1.xCord, paddle1.yCord , paddle1.paddle1W, paddle1.paddle1H);
+
+
+        }
+
+        if (downPressed){
+
+            paddle1.yCord++;
+        }
+
+
+        if (W_Pressed){
+
+            paddle2.yCord--;
+        }
+
+        if (S_Pressed){
+
+            paddle2.yCord++;
+        }
+
+
+        ctx.fillStyle = "blue"
+
+        ctx.fillRect(paddle1.xCord, paddle1.yCord , paddle1.paddle1W, paddle1.paddle1H);
+
+        ctx.fillStyle = "red";
+        ctx.fillRect(paddle2.xCord, paddle2.yCord, paddle2.paddle2W, paddle2.paddle2H);
+
+
+
+
     }, 10);
 }
 
 function HitOccurred()
 {
+
+    //ball.xPos + ball.w >= paddle1.xCord && ball.yPos + ball.h <= paddle1.yCord + paddle1H))
     
-    if(ball.xPos + ball.w >= paddle1.xCord)
+    if(ball.xPos + ball.w >= paddle1.xCord && ball.yPos >= paddle1.yCord  && ball.yPos+ ball.w <= paddle1.yCord + paddle1.paddle1H)
+    
     {
         speed = speed * -1;
     }
-    else if(ball.xPos <= paddle2.xCord + paddle2.paddle2W)
+    else if(ball.xPos <= paddle2.xCord + paddle2.paddle2W && ball.yPos >= paddle2.yCord && ball.yPos + ball.h <= paddle2.yCord + paddle2.paddle2H)
     {
+        console.log(`${ball.xPos} and ${paddle2.xCord + paddle2.paddle2W}`);
         speed = speed * -1;
+
+
     }
 }
+        newButton.onclick = gameStart;
+    
 
-newButton.onclick = gameStart;
 
 document.addEventListener('keydown', keyDownHandler);
 document.addEventListener('keyup', keyUpHandler);
 
-let upPressed = false;
-let downPressed = false;
-let W_Pressed = false;
-let S_Pressed = false;
+
 
 function keyDownHandler(event) {
     if(event.key == 'ArrowUp') {
