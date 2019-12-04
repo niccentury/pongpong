@@ -14,20 +14,29 @@ let paddle1 = {
     xCord : newCanvas.width/1.1,
     yCord : newCanvas.height/3.3,
     paddle1H : newCanvas.height/3.3,
-    paddle1W : newCanvas.width/60
+    paddle1W : newCanvas.width/72
 }
 
 let paddle2 = {
     xCord : newCanvas.width/15,
     yCord : newCanvas.height/3.3,
     paddle2H : newCanvas.height/3.3,
-    paddle2W : newCanvas.width/60
+    paddle2W : newCanvas.width/72
+}
+
+let ball = {
+    xPos : newCanvas.width/2,
+    yPos : newCanvas.height/2,
+    h : newCanvas.height/30,
+    w : newCanvas.width/61.44
 }
 
 let ctx = newCanvas.getContext("2d");
+let speed = 2;
 
 function gameStart()
 {
+    console.log(paddle2.paddle2W);
     newH1.remove();
     newButton.remove();
     document.body.appendChild(newCanvas);
@@ -37,17 +46,35 @@ function gameStart()
     //ctx.translate(-5,-5);
     ctx.fillStyle = "blue";
     ctx.fillRect(paddle1.xCord, paddle1.yCord, paddle1.paddle1W, paddle1.paddle1H);
-    ctx.fillStyle = "yellow";
+    
+
+
     gameLoop();
 }
 
 function gameLoop()
 {
     setInterval(() => {
-        ctx.clearRect(0, 0, 10, 10);
-        ctx.translate(1,1);
-        ctx.fillRect(0, 0, 10, 10);
+        ctx.clearRect(ball.xPos -1, ball.yPos-1, ball.w +1, ball.h+2);
+        ctx.fillStyle = "black";
+        ball.xPos += speed;
+        HitOccurred();
+        ctx.translate(0, 0);
+        ctx.fillRect(ball.xPos, ball.yPos, ball.w, ball.h);
     }, 10);
+}
+
+function HitOccurred()
+{
+    
+    if(ball.xPos + ball.w >= paddle1.xCord)
+    {
+        speed = speed * -1;
+    }
+    else if(ball.xPos <= paddle2.xCord + paddle2.paddle2W)
+    {
+        speed = speed * -1;
+    }
 }
 
 newButton.onclick = gameStart;
