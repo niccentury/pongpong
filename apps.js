@@ -1,5 +1,5 @@
-document.addEventListener('keydown', keyDownHandler);
-document.addEventListener('keyup', keyUpHandler);
+document.addEventListener('keydown', keyDownHandler, false);
+document.addEventListener('keyup', keyUpHandler, false);
 
 let newH1 = document.createElement("h1");
 newH1.textContent = "PONG";
@@ -12,6 +12,11 @@ document.body.appendChild(newButton);
 let newCanvas = document.createElement("canvas");
 newCanvas.width = window.innerWidth/1.5;
 newCanvas.height = window.innerHeight/1.5;
+
+let gameOverH1 = document.createElement("h1");
+let gameOverButton = document.createElement("button");
+
+newButton.onclick = gameStart;
 
 let paddle1 = {
     xCoord : newCanvas.width/1.1,
@@ -33,25 +38,36 @@ let ball = {
     xPos : newCanvas.width/2,
     yPos : newCanvas.height/2,
     h : newCanvas.height/30,
-    w : newCanvas.width/61.44
+    w : newCanvas.width/61.44,
+    serve_counter : 60,
+    first_move : true
 }
 
 let ctx = newCanvas.getContext("2d");
-let speed = 2;
-let angle = 1;
+let speed = 5;
+let angle = 2;
 
 let upPressed = false;
 let downPressed = false;
 let W_Pressed = false;
 let S_Pressed = false;
 
+let requestID;
+
+
 
 function gameStart()
 {
-    // console.log(paddle2.paddle2W);
     newH1.remove();
     newButton.remove();
+
+    gameOverH1.remove();
+    gameOverButton.remove();
     document.body.appendChild(newCanvas);
+
+
+    paddle1.score = 0;
+    paddle2.score = 0;
 
     ctx.globalCompositeOperation = "clipping";
     ctx.fillStyle = "blue";
@@ -62,27 +78,49 @@ function gameStart()
     gameLoop();
 }
 
-function gameLoop()
-{
-    setInterval(() => {
-        ctx.clearRect(0 , 0 , window.innerWidth, window.innerHeight);
+
+function gameLoop() {
+    
+    requestID = window.requestAnimationFrame(gameLoop);
+
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
         newCanvas.style.background = 'grey';
         ctx.font = "20px Georgia";
         ctx.fillStyle = 'white'
         ctx.fillText(paddle1.score, (newCanvas.width/3), 50);
         ctx.fillText(paddle2.score, (newCanvas.width/3) * 2, 50);
 
-        ctx.fillStyle = "black";
-        ball.xPos += speed;
-        ball.yPos += angle;
-        ctx.translate(0, 0);
-        ctx.fillRect(ball.xPos, ball.yPos, ball.w, ball.h);
+        if(ball.first_move == true)
+        {
+            console.log(`in the if statement, first move is ${ball.first_move}`);
+            ball.first_move = false;
+            angle = Math.random(0,1) >= .5 ? 2 : -2;
+            speed *= -1;
+            ball.serve_counter = 60;
+            ctx.translate(0, 0);
+        }
+        else if (ball.serve_counter > 0)
+        {
+            ctx.fillStyle = "black";
+            ball.serve_counter--;
+            ctx.fillRect(ball.xPos, ball.yPos, ball.w, ball.h);
+        }
+        else if (ball.first_move == false)
+        {
+            console.log(`in the else if statement, first move is ${ball.first_move}`);
+            ctx.fillStyle = "black";
+            ball.xPos += speed;
+            ball.yPos += angle;
+            ctx.translate(0, 0);
+            ctx.fillRect(ball.xPos, ball.yPos, ball.w, ball.h);
+        }
+        
 
             if (upPressed)
             {
                 if (paddle1.yCoord > 0)
                 {
-                paddle1.yCoord--;
+                paddle1.yCoord-=5;
                 }
             }
 
@@ -90,7 +128,7 @@ function gameLoop()
             {
                 if (paddle1.yCoord + paddle1.paddle1H <= newCanvas.height)
                 {
-                paddle1.yCoord++;
+                paddle1.yCoord+=5;
                 }
             }
 
@@ -99,7 +137,7 @@ function gameLoop()
         {
             if (paddle2.yCoord > 0)
             {
-                paddle2.yCoord--;
+                paddle2.yCoord-=5;
             }
         }
 
@@ -107,7 +145,7 @@ function gameLoop()
         {
             if (paddle2.yCoord + paddle2.paddle2H < newCanvas.height)
             {
-                paddle2.yCoord++;
+                paddle2.yCoord+=5;
             }
         }
 
@@ -121,11 +159,9 @@ function gameLoop()
         ctx.fillStyle = "red";
         ctx.fillRect(paddle2.xCoord, paddle2.yCoord, paddle2.paddle2W, paddle2.paddle2H);
     
-
-
-
-    }, 5);
+        
 }
+
 
 function HitOccurred()
 {
@@ -147,14 +183,20 @@ function HitOccurred()
         speed = speed * -1;
     }
 }
-        newButton.onclick = gameStart;
+        
     
 
-function ScoreEarned ()
+function ScoreEarned()
 {
-    
-    if (ball.xPos >= paddle1.xCoord)
+    if (paddle1.score == 10 || paddle2.score == 10)
     {
+    
+        GameOver();
+    }
+    
+    else if (ball.xPos >= paddle1.xCoord)
+    {
+        ball.first_move = true;
         paddle1.score ++;
         ball.xPos = newCanvas.width/2,
         ball.yPos = newCanvas.height/2,
@@ -164,6 +206,7 @@ function ScoreEarned ()
 
     else if (ball.xPos <= paddle2.xCoord)
     {
+        ball.first_move = true;
         paddle2.score ++;
         ball.xPos = newCanvas.width/2,
         ball.yPos = newCanvas.height/2,
@@ -205,4 +248,16 @@ function keyUpHandler(event)
         S_Pressed = false;
     }
 }
+
+function GameOver()
+{
+    window.cancelAnimationFrame(requestID);
+    newCanvas.remove();
+    gameOverH1.textContent = "GAME OVER";
+    document.body.appendChild(gameOverH1);
+    gameOverButton.textContent = "Play Again";
+    document.body.appendChild(gameOverButton);
+    gameOverButton.onclick = gameStart;
+}
+
 
